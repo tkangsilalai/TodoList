@@ -9,12 +9,23 @@ function App() {
   const [list, setList] = useState([]);
 
   function onSubmit(item) {
-    setList([...list, item]);
+    setList((prevList) => {
+      return [...prevList, item];
+    })
   }
 
   function onDelete(index) {
-    list.splice(index, 1);
-    setList([...list])
+    setList((prevList) => {
+      return prevList.filter((_, id) => {
+        return id !== index;
+      });
+    })
+  }
+
+  function onUpdate(item, index) {
+    setList((prevList) => {
+      return [...prevList.slice(0, index), item, ...prevList.slice(index+1, prevList.length)];
+    })
   }
 
   return (
@@ -28,13 +39,15 @@ function App() {
           button="Add"
         />
         {list.map((item, index) =>
+        (
           <TodoItem 
             key={index}
             index={index}
             text={item} 
             onDelete={onDelete}
+            onUpdate={onUpdate}
           />
-        )}
+        ))}
       </center>
     </div>
   );

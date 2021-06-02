@@ -25,7 +25,7 @@ const ButtonDiv = styled.div`
 function TodoItem(props) {
 
     const [isEdited, setIsEdited] = useState(false)
-    const [text, setText] = useState(props.text)
+    // const [text, setText] = useState(props.text)
 
     function handleDelete() {
         props.onDelete(props.index)
@@ -36,7 +36,7 @@ function TodoItem(props) {
     }
 
     function handleUpdate(item) {
-        setText(item)
+        props.onUpdate(item, props.index)
     }
 
     return (
@@ -45,7 +45,7 @@ function TodoItem(props) {
                 ?
                 <>
                     <TextDiv>
-                        {text}
+                        {props.text}
                     </TextDiv>
                     <ButtonDiv>
 
@@ -64,7 +64,7 @@ function TodoItem(props) {
                 :
                 <Forms
                     onSubmit={handleUpdate}
-                    text={text}
+                    text={props.text}
                     button="Update"
                     setIsEdited={setIsEdited}
                 />
