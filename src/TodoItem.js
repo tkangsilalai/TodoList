@@ -28,7 +28,7 @@ function TodoItem(props) {
     // const [text, setText] = useState(props.text)
 
     function handleDelete() {
-        props.onDelete(props.index)
+        props.onDelete(props._id)
     }
 
     function handleEdit() {
@@ -36,7 +36,7 @@ function TodoItem(props) {
     }
 
     function handleUpdate(item) {
-        props.onUpdate(item, props.index)
+        props.onUpdate(item, props._id)
     }
 
     return (

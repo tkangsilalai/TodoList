@@ -3,10 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ModalProvider } from './Modal';
+import { APIProvider } from "./API";
+import { AuthAPIProvider } from "./AuthAPI";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <APIProvider>
+      <AuthAPIProvider>
+        <ModalProvider>
+          <App />
+        </ModalProvider>
+      </AuthAPIProvider>
+    </APIProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

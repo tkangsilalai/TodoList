@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const ButtonStyled = styled.button`
     font-size: 1.5em;
@@ -22,6 +23,13 @@ function Button(props) {
                 {props.text}
             </ButtonStyled>
     );
+}
+
+Button.propTypes = {
+    color: PropTypes.string,
+    text: PropTypes.string,
+    float: PropTypes.string,
+    onClick: PropTypes.func
 }
 
 export default Button;
