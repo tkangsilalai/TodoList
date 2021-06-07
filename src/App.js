@@ -1,82 +1,62 @@
 import './App.css';
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import Header from './Header';
 import Forms from './Forms';
 import TodoItem from './TodoItem';
-import { APIContext, getNoAuth, /* postNoAuth, putNoAuth, deleteNoAuth */ } from "./API";
-import { AuthAPIContext, login, postAuth, putAuth, deleteAuth } from "./AuthAPI";
+import { APIContext, getNoAuth} from "./API";
+import { login, get } from './actions'
+import { AuthAPIContext, postAuth, putAuth, deleteAuth } from "./AuthAPI";
+import { useDispatch, useSelector } from 'react-redux';
+// import {get, update, del} from './actions'; 
+
 function App() {
+
+  const todolist = useSelector(state => state.todolist);
+  const isLogged = useSelector(state => state.isLogged);
+  const dispatch = useDispatch();
 
   const [auth_domain] = useContext(AuthAPIContext);
   const [domain] = useContext(APIContext);
 
-  const [list, setList] = useState([]);
-  const [token, setToken] = useState("");
-
   useEffect(() => {
     getNoAuth(domain).then(data => {
       const mapData = data.data;
-      setList(mapData)
+      dispatch(get(mapData));
     });
-    login(auth_domain).then(data => {
-      setToken(data.token);
-    });
-  }, [domain, auth_domain]);
+    dispatch(login());
+  }, [domain, dispatch]);
 
   function onSubmit(item) {
-    // setList((prevList) => {
-    //   return [...prevList, item];
-    // })
-    // postNoAuth(domain, item).then(() => {
-    //   getNoAuth(domain).then(data => {
-    //     const mapData = data.data;
-    //     setList(mapData)
-    //   });
-    // });
-    postAuth(auth_domain, item, token).then(() => {
-      getNoAuth(domain).then(data => {
-        const mapData = data.data;
-        setList(mapData)
+    isLogged.then((token) => {
+      postAuth(auth_domain, item, token).then(() => {
+        getNoAuth(domain).then(data => {
+          const mapData = data.data;
+          dispatch(get(mapData));
+        });
       });
     });
   }
 
   function onDelete(_id) {
-    deleteAuth(auth_domain, _id, token).then(() => {
-      getNoAuth(domain).then(data => {
-        const mapData = data.data;
-        setList(mapData)
-      });
-    })
-    // deleteNoAuth(domain, _id).then(() => {
-    //   getNoAuth(domain).then(data => {
-    //     const mapData = data.data;
-    //     setList(mapData)
-    //   });
-    // })
-    // setList((prevList) => {
-    //   return prevList.filter((_, id) => {
-    //     return id !== index;
-    //   });
-    // });
+    isLogged.then((token) => {
+      deleteAuth(auth_domain, _id, token).then(() => {
+        getNoAuth(domain).then(data => {
+          const mapData = data.data;
+          dispatch(get(mapData));
+        });
+      })
+    });
   }
 
   function onUpdate(item, _id) {
-    putAuth(auth_domain, item, _id, token).then(() => {
-      getNoAuth(domain).then(data => {
-        const mapData = data.data;
-        setList(mapData)
+    isLogged.then((token) => {
+      putAuth(auth_domain, item, _id, token).then(() => {
+        getNoAuth(domain).then(data => {
+          const mapData = data.data;
+          dispatch(get(mapData));
+        });
       });
     });
-    // putNoAuth(domain, item, _id).then(() => {
-    //   getNoAuth(domain).then(data => {
-    //     const mapData = data.data;
-    //     setList(mapData)
-    //   });
-    // })
-    // setList((prevList) => {
-    //   return [...prevList.slice(0, index), item, ...prevList.slice(index + 1, prevList.length)];
-    // })
   }
 
   return (
@@ -89,7 +69,7 @@ function App() {
           text=""
           button="Add"
         />
-        {list.map((item, index) =>
+        {todolist.map((item, index) =>
         (
           <TodoItem
             key={index}
