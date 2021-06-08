@@ -6,11 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import { ModalProvider } from './Modal';
 import { APIProvider } from "./API";
 import { AuthAPIProvider } from "./AuthAPI";
-import { createStore } from "redux";
-import allReducers from './reducers/index';
+// import { createStore } from "redux";
+// import allReducers from './reducers/index';
 import { Provider } from 'react-redux'
+// import TestRedux from './test-redux';
+import store from './redux-test/store';
 
-const store = createStore(allReducers);
+// const store = createStore(allReducers);
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,6 +21,7 @@ ReactDOM.render(
         <Provider store={store}>
           <ModalProvider>
             <App />
+            {/* <TestRedux></TestRedux> */}
           </ModalProvider>
         </Provider>
       </AuthAPIProvider>
